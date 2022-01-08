@@ -52,15 +52,18 @@ bin:
 ifeq ($(MULTILIB), Yes)
 bin/32/flang-new: bin build/x86/bin/flang-new
 	mkdir -p bin/32
+	strip build/x86/bin/flang-new
 	cp build/x86/bin/flang-new bin/32/flang-new
 else
 bin/32/flang-new: bin build/i686/bin/flang-new
 	mkdir -p bin/32
+	musl/output/bin/i686-linux-musl-strip build/i686/bin/flang-new
 	cp build/i686/bin/flang-new bin/32/flang-new
 endif
 
 bin/64/flang-new: bin build/x86_64/bin/flang-new
 	mkdir -p bin/64
+	strip build/x86_64/bin/flang-new
 	cp build/x86_64/bin/flang-new bin/64/flang-new
 
 bin.tar.gz: bin/64/flang-new bin/32/flang-new
