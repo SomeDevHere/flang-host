@@ -1,0 +1,15 @@
+--- ../RTBuilder.h.orig	2021-12-26 09:08:34.100586747 +0000
++++ ./f18-llvm-project/flang/include/flang/Optimizer/Builder/Runtime/RTBuilder.h	2021-12-26 10:49:38.565942605 +0000
+@@ -78,6 +78,12 @@
+   };
+ }
+ template <>
++constexpr TypeBuilderFunc getModel<unsigned int>() {
++  return [](mlir::MLIRContext *context) -> mlir::Type {
++    return mlir::IntegerType::get(context, 8 * sizeof(unsigned int));
++  };
++}
++template <>
+ constexpr TypeBuilderFunc getModel<char *>() {
+   return [](mlir::MLIRContext *context) -> mlir::Type {
+     return fir::ReferenceType::get(mlir::IntegerType::get(context, 8));

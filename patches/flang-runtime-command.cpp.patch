@@ -1,0 +1,11 @@
+--- ../command.cpp.orig	2021-12-24 08:37:32.766966911 +0000
++++ ./f18-llvm-project/flang/runtime/command.cpp	2021-12-24 08:38:58.623497370 +0000
+@@ -30,7 +30,7 @@
+   if constexpr (sizeof(std::size_t) <= sizeof(std::int64_t)) {
+     return static_cast<std::int64_t>(length);
+   } else {
+-    std::size_t max{std::numeric_limits<std::int64_t>::max()};
++    std::size_t max{static_cast<std::size_t>(std::numeric_limits<std::int64_t>::max())};
+     return length > max ? 0 // Just fail.
+                         : static_cast<std::int64_t>(length);
+   }

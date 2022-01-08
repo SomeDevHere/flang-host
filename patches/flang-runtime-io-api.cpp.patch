@@ -1,0 +1,18 @@
+--- ../io-api.cpp.orig	2021-12-24 12:19:22.229386788 +0000
++++ ./f18-llvm-project/flang/runtime/io-api.cpp	2021-12-24 12:19:41.253483142 +0000
+@@ -984,7 +984,6 @@
+   return descr::DescriptorIO<Direction::Output>(*cookie, descriptor);
+ }
+ 
+-#ifdef __SIZEOF_INT128__
+ bool IONAME(OutputInteger128)(Cookie cookie, common::int128_t n) {
+   cookie->CheckFormattedStmtType<Direction::Output>("OutputInteger128");
+   StaticDescriptor staticDescriptor;
+@@ -993,7 +992,6 @@
+       TypeCategory::Integer, 16, reinterpret_cast<void *>(&n), 0);
+   return descr::DescriptorIO<Direction::Output>(*cookie, descriptor);
+ }
+-#endif
+ 
+ bool IONAME(InputInteger)(Cookie cookie, std::int64_t &n, int kind) {
+   cookie->CheckFormattedStmtType<Direction::Input>("InputInteger");

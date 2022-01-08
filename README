@@ -1,0 +1,26 @@
+Flang Host Build Scripts for Termux
+===================================
+
+A makefile to build flang-new binaries for compiling Termux packages
+using the termux-packages build infrastructure
+
+
+Just call `make` and the resulting bin.tar.gz contains builds for both
+32 and 64 bit versions of Android. The termux build scripts use the 
+flang-new wrapper driver to avoid issues with the output of the compilers
+
+Both 32 and 64 bit versions are used as patches which enable 32 bit 
+versions of flang to compile also affect the binaries which the resulting
+flang compiler creates.
+
+License
+-------
+The top directory build scripts are licensed under the Apache 2.0 license
+as found in the `LICENSE` file.
+
+The patchfiles in `patches` are distributed under the terms and conditions
+of the upstreamed project to which it is applied.
+
+Similarly, any binary artifacts produced using the build scripts retain
+any original licensing from the upstreamed projects. The author of the
+build scripts do not make any additional copyright claims to these artifacts.

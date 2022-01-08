@@ -1,0 +1,20 @@
+--- ../transformational.cpp.orig	2021-12-26 10:35:57.061788289 +0000
++++ ./f18-llvm-project/flang/runtime/transformational.cpp	2021-12-26 10:42:34.475809108 +0000
+@@ -184,7 +184,7 @@
+   SubscriptValue lb{sourceDim.LowerBound()};
+   for (SubscriptValue j{0}; j < extent; ++j) {
+     SubscriptValue resultAt{1 + j};
+-    SubscriptValue sourceAt{lb + (j + shift) % extent};
++    SubscriptValue sourceAt{static_cast<SubscriptValue>(lb + (j + shift) % extent)};
+     if (sourceAt < lb) {
+       sourceAt += extent;
+     }
+@@ -282,7 +282,7 @@
+   }
+   SubscriptValue lb{source.GetDimension(0).LowerBound()};
+   for (SubscriptValue j{1}; j <= extent; ++j) {
+-    SubscriptValue sourceAt{lb + j - 1 + shift};
++    SubscriptValue sourceAt{static_cast<SubscriptValue>(lb + j - 1 + shift)};
+     if (sourceAt >= lb && sourceAt < lb + extent) {
+       CopyElement(result, &j, source, &sourceAt, terminator);
+     } else if (boundary) {
