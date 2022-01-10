@@ -2,4 +2,5 @@ bin/
 build/ 
 musl/ 
 f18-llvm-project/
+flang/
 bin.tar.gz

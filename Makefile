@@ -13,17 +13,25 @@ f18-llvm-project:
 musl:
 	make -f Extract.inc musl
 
+flang:
+	make -f Extract.inc flang
+
 musl/output/bin: musl
 	cd musl; \
 	make TARGET=i686-linux-musl install
 
-build: f18-llvm-project patch
+build: f18-llvm-project patch flang
 	mkdir -p build
+
+build/host/lib/libpgmath.so: build
+	mkdir -p build/host
+	cd build/host; \
+	cmake -G Ninja ../../flang/runtime/libpgmath; \
+	ninja -j $(NPROC)
 
 build/x86_64/bin/flang-new: build
 	mkdir -p build/x86_64
 	cd build/x86_64; \
-	pwd; \
 	cmake -G Ninja ../../f18-llvm-project/llvm $(LLVM_CMAKE_ARGS); \
 	ninja -j $(NPROC) flang-new
 
@@ -66,7 +74,12 @@ bin/64/flang-new: bin build/x86_64/bin/flang-new
 	strip build/x86_64/bin/flang-new
 	cp build/x86_64/bin/flang-new bin/64/flang-new
 
-bin.tar.gz: bin/64/flang-new bin/32/flang-new
+bin/lib/libpgmath.so: bin build/host/lib/libpgmath.so
+	mkdir -p bin/lib
+	strip build/host/lib/libpgmath.so
+	cp build/host/lib/libpgmath.so bin/lib/libpgmath.so
+
+bin.tar.gz: bin/lib/libpgmath.so bin/64/flang-new bin/32/flang-new
 	tar zcf bin.tar.gz bin
 
 clean:
