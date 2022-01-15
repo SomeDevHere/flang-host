@@ -1,4 +1,5 @@
-bin/ 
+bin/
+lib/ 
 build/ 
 musl/ 
 f18-llvm-project/

@@ -33,7 +33,7 @@ build/x86_64/bin/flang-new: build
 	mkdir -p build/x86_64
 	cd build/x86_64; \
 	cmake -G Ninja ../../f18-llvm-project/llvm $(LLVM_CMAKE_ARGS); \
-	ninja -j $(NPROC) flang-new
+	ninja -j $(NPROC) flang-new libFortranRuntime.a libFortranDecimal.a libFortran_main.a
 
 build/x86/bin/flang-new: build
 	mkdir -p build/x86
@@ -57,6 +57,9 @@ build/i686/bin/flang-new: build musl/output/bin
 bin:
 	mkdir -p bin
 
+lib:
+	mkdir -p lib
+
 ifeq ($(MULTILIB), Yes)
 bin/32/flang-new: bin build/x86/bin/flang-new
 	mkdir -p bin/32
@@ -74,16 +77,24 @@ bin/64/flang-new: bin build/x86_64/bin/flang-new
 	strip build/x86_64/bin/flang-new
 	cp build/x86_64/bin/flang-new bin/64/flang-new
 
-bin/lib/libpgmath.so: bin build/host/lib/libpgmath.so
-	mkdir -p bin/lib
+lib/libpgmath.so: lib build/host/lib/libpgmath.so
 	strip build/host/lib/libpgmath.so
-	cp build/host/lib/libpgmath.so bin/lib/libpgmath.so
+	cp build/host/lib/libpgmath.so lib/libpgmath.so
 
-bin.tar.gz: bin/lib/libpgmath.so bin/64/flang-new bin/32/flang-new
-	tar zcf bin.tar.gz bin
+lib/libFortranRuntime.a: lib build/x86_64/bin/flang-new
+	cp build/x86_64/lib/libFortranRuntime.a lib/libFortranRuntime.a
+
+lib/libFortranDecimal.a: lib build/x86_64/bin/flang-new
+	cp build/x86_64/lib/libFortranDecimal.a lib/libFortranDecimal.a
+
+lib/libFortran_main.a: lib build/x86_64/bin/flang-new
+	cp build/x86_64/lib/libFortranRuntime.a lib/libFortran_main.a
+
+bin.tar.gz: lib/libpgmath.so lib/libFortranRuntime.a lib/libFortranDecimal.a lib/libFortran_main.a bin/64/flang-new bin/32/flang-new
+	tar zcf bin.tar.gz bin lib
 
 clean:
-	rm -rf bin build conftest
+	rm -rf bin lib build conftest bin.tar.gz
 	if [ -f musl/Makefile ]; then \
 		cd musl; \
 		make clean; \
